@@ -1,0 +1,16 @@
+version: '3'
+services:
+  lab:
+    build: .
+    hostname: lab
+    # command: npm run test
+    command: tail -f /dev/null
+    volumes:
+      - ..:/usr/src/api
+    ports:
+      - "23084:8081"
+    env_file:
+      - variables.env
+networks:
+  default:
+    driver: bridge
