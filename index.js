@@ -2,6 +2,9 @@
 
 const Hapi = require('hapi');
 const Sequelize = require('sequelize');
+const Inert = require('inert');
+const Vision = require('vision');
+const HapiSwagger = require('hapi-swagger');
 
 module.exports = (async() => {
   const server = new Hapi.Server({
@@ -49,6 +52,7 @@ module.exports = (async() => {
     }
   });
 
+  // NOTE: This will wipe/forcibly restructure a database. ONLY USE FOR DEV.
   await sequelize.sync({force: true});
 
   // Build the routes of all our modules, injecting the models into each
@@ -73,6 +77,20 @@ module.exports = (async() => {
         .response('Hello, world!');
     }
   });
+
+  const swaggerOptions = {
+    host: process.env.SELF_HOST,
+    info: {
+      title: 'API Documentation',
+      version: "1.0",
+    },
+    grouping: 'tags'
+  };
+
+  await server.register([Inert, Vision, {
+    'plugin': HapiSwagger,
+    'options': swaggerOptions
+  }]);
 
   try {
     server.start();

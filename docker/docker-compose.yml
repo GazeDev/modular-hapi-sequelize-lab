@@ -3,8 +3,10 @@ services:
   lab:
     build: .
     hostname: lab
+    # command: npm run start
+    command: npm run dev
     # command: npm run test
-    command: tail -f /dev/null
+    # command: npm run hold
     volumes:
       - ..:/usr/src/api
     ports:
