@@ -1,5 +1,4 @@
-services:
-  - postgres
+image: node:10.15.3
 
 variables:
   # Configure postgres service (https://hub.docker.com/_/postgres/)
@@ -16,15 +15,17 @@ variables:
   CORS_ORIGIN: localhost
   SELF_HOST: localhost:23085
 
-database:
-  image: postgres
-  script:
-  # official way to provide password to psql: http://www.postgresql.org/docs/9.3/static/libpq-envars.html
-  - export PGPASSWORD=$POSTGRES_PASSWORD
-  - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+services:
+  - postgres
 
-unit test node10: &unit
-  image: node:10.15.3
+# database:
+#   image: postgres
+#   script:
+#   # official way to provide password to psql: http://www.postgresql.org/docs/9.3/static/libpq-envars.html
+#   - export PGPASSWORD=$POSTGRES_PASSWORD
+#   - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+
+all_tests:
   script:
    - npm install
-   - npm test
+   - npm run test
