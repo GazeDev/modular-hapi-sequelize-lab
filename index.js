@@ -73,6 +73,7 @@ module.exports = (async() => {
       },
       logging: false,
     });
+    console.log('sequelize', sequelize);
   } catch (err) {
     console.log('Sequelize init error:');
     console.log(err);
