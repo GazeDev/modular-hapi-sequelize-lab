@@ -1,7 +1,7 @@
 'use strict';
 
 const Hapi = require('hapi');
-const Sequelize = require('sequelize');
+// const Sequelize = require('sequelize');
 const Inert = require('inert');
 const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
@@ -58,27 +58,27 @@ module.exports = (async() => {
     db_type = process.env.DB_TYPE;
   }
 
-  let sequelize;
-  try {
-    sequelize = new Sequelize(db_name, db_user, db_password, {
-      host: db_host,
-      dialect: db_type,
-      port: db_port,
-      pool: {
-        log: true,
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-      },
-      logging: false,
-    });
-    console.log('new sequelize');
-    console.log('sequelize', sequelize);
-  } catch (err) {
-    console.log('Sequelize init error:');
-    console.log(err);
-  }
+  // let sequelize;
+  // try {
+  //   sequelize = new Sequelize(db_name, db_user, db_password, {
+  //     host: db_host,
+  //     dialect: db_type,
+  //     port: db_port,
+  //     pool: {
+  //       log: true,
+  //       max: 5,
+  //       min: 0,
+  //       acquire: 30000,
+  //       idle: 10000
+  //     },
+  //     logging: false,
+  //   });
+  //   console.log('new sequelize');
+  //   console.log('sequelize', sequelize);
+  // } catch (err) {
+  //   console.log('Sequelize init error:');
+  //   console.log(err);
+  // }
 
 
   const modules = require('./lib/modules');
@@ -87,34 +87,34 @@ module.exports = (async() => {
 
   const routes = [];
 
-  // define the models of all of our modules
-  for (let mod of modules) {
-    let modelsFile;
-    try {
-      modelsFile = require(`./lib/${mod}/${mod}.models.js`);
-      if (modelsFile.db) {
-        let model = modelsFile.db(sequelize, Sequelize);
-        models[model.name] = model;
-      }
-    } catch(err) {
-      console.log(err);
-      console.log(`module ${mod} did not have a models file`);
-    }
-  }
-  // now that all the models are loaded, run associations
-  Object.keys(models).forEach(function(modelName) {
-    if (models[modelName].associate) {
-      models[modelName].associate(models);
-    }
-  });
-
-  // NOTE: This will wipe/forcibly restructure a database. ONLY USE FOR DEV.
-  try {
-    await sequelize.sync({force: true});
-  } catch (e) {
-    console.log('sync error');
-    console.log(e);
-  }
+  // // define the models of all of our modules
+  // for (let mod of modules) {
+  //   let modelsFile;
+  //   try {
+  //     modelsFile = require(`./lib/${mod}/${mod}.models.js`);
+  //     if (modelsFile.db) {
+  //       let model = modelsFile.db(sequelize, Sequelize);
+  //       models[model.name] = model;
+  //     }
+  //   } catch(err) {
+  //     console.log(err);
+  //     console.log(`module ${mod} did not have a models file`);
+  //   }
+  // }
+  // // now that all the models are loaded, run associations
+  // Object.keys(models).forEach(function(modelName) {
+  //   if (models[modelName].associate) {
+  //     models[modelName].associate(models);
+  //   }
+  // });
+  //
+  // // NOTE: This will wipe/forcibly restructure a database. ONLY USE FOR DEV.
+  // try {
+  //   await sequelize.sync({force: true});
+  // } catch (e) {
+  //   console.log('sync error');
+  //   console.log(e);
+  // }
 
   const validateUser = async (decoded, request) => {
     // This is a simple check that the `sub` claim
@@ -176,18 +176,18 @@ module.exports = (async() => {
    */
 
   // Build the routes of all our modules, injecting the models into each
-  for (let mod of modules) {
-    let routesFile;
-    try {
-      routesFile = require(`./lib/${mod}/${mod}.routes.js`);
-      if(routesFile.routes) {
-        await server.route(routesFile.routes(models));
-      }
-    } catch(err) {
-      console.log(err);
-      console.log(`module ${mod} did not have a routes file or hapi failed to register them`);
-    }
-  }
+  // for (let mod of modules) {
+  //   let routesFile;
+  //   try {
+  //     routesFile = require(`./lib/${mod}/${mod}.routes.js`);
+  //     if(routesFile.routes) {
+  //       await server.route(routesFile.routes(models));
+  //     }
+  //   } catch(err) {
+  //     console.log(err);
+  //     console.log(`module ${mod} did not have a routes file or hapi failed to register them`);
+  //   }
+  // }
 
   server.route({
     method: 'GET',
@@ -240,6 +240,6 @@ module.exports = (async() => {
 
   return {
     server: server,
-    sequelize: sequelize
+    // sequelize: sequelize
   };
 })();

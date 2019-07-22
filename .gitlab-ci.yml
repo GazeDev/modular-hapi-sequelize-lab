@@ -15,8 +15,8 @@ variables:
   CORS_ORIGIN: localhost
   SELF_HOST: localhost:23085
 
-services:
-  - postgres
+# services:
+#   - postgres
 
 # database:
 #   image: postgres
