@@ -14,6 +14,14 @@ variables:
   DB_PASSWORD: custom_pass
   CORS_ORIGIN: localhost
   SELF_HOST: localhost:23085
+  JWT_AUDIENCE: account
+  JWT_ISSUER: https://accounts.gaze.dev/auth/realms/test-accounts
+  JWT_NETWORK_URI: https://accounts.gaze.dev/auth/realms/test-accounts
+  JWT_CLIENT: housingdb
+  ADDRESS_API: https://maps.googleapis.com/maps/api/geocode/json
+  ADDRESS_API_KEY: aaa
+  TEST_USER: bbb
+  TEST_PASSWORD: ccc
 
 # services:
 #   - postgres

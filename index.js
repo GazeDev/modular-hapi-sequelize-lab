@@ -1,7 +1,7 @@
 'use strict';
 
 const Hapi = require('hapi');
-// const Sequelize = require('sequelize');
+const Sequelize = require('sequelize');
 const Inert = require('inert');
 const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
@@ -13,19 +13,19 @@ const jwksRsa = require('jwks-rsa');
 module.exports = (async() => {
 
   const envVars = [
-    // 'CORS_ORIGIN',
-    // 'SELF_HOST',
-    // 'JWT_AUDIENCE',
-    // 'JWT_ISSUER',
-    // 'JWT_NETWORK_URI',
-    // 'JWT_CLIENT',
-    // 'ADDRESS_API',
-    // 'ADDRESS_API_KEY'
+    'CORS_ORIGIN',
+    'SELF_HOST',
+    'JWT_AUDIENCE',
+    'JWT_ISSUER',
+    'JWT_NETWORK_URI',
+    'JWT_CLIENT',
+    'ADDRESS_API',
+    'ADDRESS_API_KEY'
   ];
 
   for (let envVar of envVars) {
     if (!process.env[envVar]) {
-      throw `Error: Make sure you have ${envVar} in your environment variables.`;
+      console.error(`Error: Make sure you have ${envVar} in your environment variables.`);
     }
   }
 
@@ -37,48 +37,48 @@ module.exports = (async() => {
     }}
   });
 
-  // // standardize variables used for db connection
-  // let db_name, db_user, db_password, db_host, db_port, db_type;
-  //
-  // // db connection may be set as a DATABASE_URL string we have to parse
-  // if (process.env.DATABASE_URL) {
-  //   let url = new URL(process.env.DATABASE_URL);
-  //   db_name = url.pathname.replace(/^\//, "");
-  //   db_user = url.username;
-  //   db_password = url.password;
-  //   db_host = url.hostname;
-  //   db_port = url.port;
-  //   db_type = url.protocol.replace(/\:$/, "")
-  // } else {
-  //   db_name = process.env.DB_NAME;
-  //   db_user = process.env.DB_USER;
-  //   db_password = process.env.DB_PASSWORD;
-  //   db_host = process.env.DB_HOST;
-  //   db_port = 5432;
-  //   db_type = process.env.DB_TYPE;
-  // }
+  // standardize variables used for db connection
+  let db_name, db_user, db_password, db_host, db_port, db_type;
 
-  // let sequelize;
-  // try {
-  //   sequelize = new Sequelize(db_name, db_user, db_password, {
-  //     host: db_host,
-  //     dialect: db_type,
-  //     port: db_port,
-  //     pool: {
-  //       log: true,
-  //       max: 5,
-  //       min: 0,
-  //       acquire: 30000,
-  //       idle: 10000
-  //     },
-  //     logging: false,
-  //   });
-  //   console.log('new sequelize');
-  //   console.log('sequelize', sequelize);
-  // } catch (err) {
-  //   console.log('Sequelize init error:');
-  //   console.log(err);
-  // }
+  // db connection may be set as a DATABASE_URL string we have to parse
+  if (process.env.DATABASE_URL) {
+    let url = new URL(process.env.DATABASE_URL);
+    db_name = url.pathname.replace(/^\//, "");
+    db_user = url.username;
+    db_password = url.password;
+    db_host = url.hostname;
+    db_port = url.port;
+    db_type = url.protocol.replace(/\:$/, "")
+  } else {
+    db_name = process.env.DB_NAME;
+    db_user = process.env.DB_USER;
+    db_password = process.env.DB_PASSWORD;
+    db_host = process.env.DB_HOST;
+    db_port = 5432;
+    db_type = process.env.DB_TYPE;
+  }
+
+  let sequelize;
+  try {
+    sequelize = new Sequelize(db_name, db_user, db_password, {
+      host: db_host,
+      dialect: db_type,
+      port: db_port,
+      pool: {
+        log: true,
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+      },
+      logging: false,
+    });
+    console.log('new sequelize');
+    console.log('sequelize', sequelize);
+  } catch (err) {
+    console.log('Sequelize init error:');
+    console.log(err);
+  }
 
 
   const modules = require('./lib/modules');
