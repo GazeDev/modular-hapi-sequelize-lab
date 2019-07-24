@@ -13,7 +13,7 @@ const jwksRsa = require('jwks-rsa');
 module.exports = (async() => {
 
   const envVars = [
-    'CORS_ORIGIN',
+    // 'CORS_ORIGIN',
     'SELF_HOST',
     'JWT_AUDIENCE',
     'JWT_ISSUER',
@@ -33,30 +33,30 @@ module.exports = (async() => {
     port: process.env.PORT || 8081,
     routes: {cors: {
       additionalHeaders: ['access-control-allow-origin'],
-      origin: [process.env.CORS_ORIGIN],
+      // origin: [process.env.CORS_ORIGIN],
     }}
   });
 
-  // standardize variables used for db connection
-  let db_name, db_user, db_password, db_host, db_port, db_type;
-
-  // db connection may be set as a DATABASE_URL string we have to parse
-  if (process.env.DATABASE_URL) {
-    let url = new URL(process.env.DATABASE_URL);
-    db_name = url.pathname.replace(/^\//, "");
-    db_user = url.username;
-    db_password = url.password;
-    db_host = url.hostname;
-    db_port = url.port;
-    db_type = url.protocol.replace(/\:$/, "")
-  } else {
-    db_name = process.env.DB_NAME;
-    db_user = process.env.DB_USER;
-    db_password = process.env.DB_PASSWORD;
-    db_host = process.env.DB_HOST;
-    db_port = 5432;
-    db_type = process.env.DB_TYPE;
-  }
+  // // standardize variables used for db connection
+  // let db_name, db_user, db_password, db_host, db_port, db_type;
+  //
+  // // db connection may be set as a DATABASE_URL string we have to parse
+  // if (process.env.DATABASE_URL) {
+  //   let url = new URL(process.env.DATABASE_URL);
+  //   db_name = url.pathname.replace(/^\//, "");
+  //   db_user = url.username;
+  //   db_password = url.password;
+  //   db_host = url.hostname;
+  //   db_port = url.port;
+  //   db_type = url.protocol.replace(/\:$/, "")
+  // } else {
+  //   db_name = process.env.DB_NAME;
+  //   db_user = process.env.DB_USER;
+  //   db_password = process.env.DB_PASSWORD;
+  //   db_host = process.env.DB_HOST;
+  //   db_port = 5432;
+  //   db_type = process.env.DB_TYPE;
+  // }
 
   // let sequelize;
   // try {
@@ -116,54 +116,54 @@ module.exports = (async() => {
   //   console.log(e);
   // }
 
-  const validateUser = async (decoded, request) => {
-    // This is a simple check that the `sub` claim
-    // exists in the access token.
-
-    if (decoded && decoded.sub) {
-      // Email may not be verified, we should decide if that's OK and/or if we
-      // validate that at this level or the route level.
-      return {
-        isValid: true,
-        credentials: {
-          scope: decoded.scope.split(' '),
-          resourceAccess: decoded.resource_access,
-          subjectId: decoded.sub,
-          email: decoded.email,
-          emailVerified: decoded.email_verified,
-          name: decoded.name,
-          preferredUsername: decoded.preferred_username,
-          givenName: decoded.given_name,
-          familyName: decoded.family_name,
-        },
-      };
-    }
-    return { isValid: false };
-  };
-
-  await server.register(jwt);
-
-  server.auth.strategy('jwt', 'jwt', {
-    complete: true,
-    // verify the access token against the remote JWKS
-    key: jwksRsa.hapiJwt2KeyAsync({
-      cache: true,
-      rateLimit: true,
-      jwksRequestsPerMinute: 60,
-      jwksUri: `${process.env.JWT_NETWORK_URI}/protocol/openid-connect/certs`,
-    }),
-    verifyOptions: {
-      audience: process.env.JWT_AUDIENCE,
-      issuer: process.env.JWT_ISSUER,
-      algorithms: ['RS256']
-    },
-    validate: validateUser
-  });
-
-  server.auth.default({
-    strategy: 'jwt',
-    mode: 'optional'
-  });
+  // const validateUser = async (decoded, request) => {
+  //   // This is a simple check that the `sub` claim
+  //   // exists in the access token.
+  //
+  //   if (decoded && decoded.sub) {
+  //     // Email may not be verified, we should decide if that's OK and/or if we
+  //     // validate that at this level or the route level.
+  //     return {
+  //       isValid: true,
+  //       credentials: {
+  //         scope: decoded.scope.split(' '),
+  //         resourceAccess: decoded.resource_access,
+  //         subjectId: decoded.sub,
+  //         email: decoded.email,
+  //         emailVerified: decoded.email_verified,
+  //         name: decoded.name,
+  //         preferredUsername: decoded.preferred_username,
+  //         givenName: decoded.given_name,
+  //         familyName: decoded.family_name,
+  //       },
+  //     };
+  //   }
+  //   return { isValid: false };
+  // };
+  //
+  // await server.register(jwt);
+  //
+  // server.auth.strategy('jwt', 'jwt', {
+  //   complete: true,
+  //   // verify the access token against the remote JWKS
+  //   key: jwksRsa.hapiJwt2KeyAsync({
+  //     cache: true,
+  //     rateLimit: true,
+  //     jwksRequestsPerMinute: 60,
+  //     jwksUri: `${process.env.JWT_NETWORK_URI}/protocol/openid-connect/certs`,
+  //   }),
+  //   verifyOptions: {
+  //     audience: process.env.JWT_AUDIENCE,
+  //     issuer: process.env.JWT_ISSUER,
+  //     algorithms: ['RS256']
+  //   },
+  //   validate: validateUser
+  // });
+  //
+  // server.auth.default({
+  //   strategy: 'jwt',
+  //   mode: 'optional'
+  // });
 
   /*
     NOTE:
@@ -198,38 +198,38 @@ module.exports = (async() => {
     }
   });
 
-  const swaggerOptions = {
-    host: process.env.SELF_HOST,
-    info: {
-      title: 'API Documentation',
-      version: "1.0",
-    },
-    grouping: 'tags',
-    securityDefinitions: {
-      'Bearer': {
-        'type': 'apiKey',
-        'name': 'Authorization',
-        'in': 'header'
-      },
-      'gaze_auth': {
-        'type':	'oauth2',
-        'authorizationUrl':	`${process.env.JWT_ISSUER}/protocol/openid-connect/auth`,
-        'tokenUrl': `${process.env.JWT_ISSUER}/protocol/openid-connect/token`,
-        'flow':	'accessCode'
-      },
-    },
-    security: [{ 'Bearer': []}],
-    // jsonEditor: true,
-  };
-
-  try {
-    await server.register([Inert, Vision, {
-      'plugin': HapiSwagger,
-      'options': swaggerOptions
-    }]);
-  } catch (err) {
-    console.log(err);
-  }
+  // const swaggerOptions = {
+  //   host: process.env.SELF_HOST,
+  //   info: {
+  //     title: 'API Documentation',
+  //     version: "1.0",
+  //   },
+  //   grouping: 'tags',
+  //   securityDefinitions: {
+  //     'Bearer': {
+  //       'type': 'apiKey',
+  //       'name': 'Authorization',
+  //       'in': 'header'
+  //     },
+  //     'gaze_auth': {
+  //       'type':	'oauth2',
+  //       'authorizationUrl':	`${process.env.JWT_ISSUER}/protocol/openid-connect/auth`,
+  //       'tokenUrl': `${process.env.JWT_ISSUER}/protocol/openid-connect/token`,
+  //       'flow':	'accessCode'
+  //     },
+  //   },
+  //   security: [{ 'Bearer': []}],
+  //   // jsonEditor: true,
+  // };
+  //
+  // try {
+  //   await server.register([Inert, Vision, {
+  //     'plugin': HapiSwagger,
+  //     'options': swaggerOptions
+  //   }]);
+  // } catch (err) {
+  //   console.log(err);
+  // }
 
 
   try {
