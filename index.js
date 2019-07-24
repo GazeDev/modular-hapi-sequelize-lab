@@ -14,13 +14,13 @@ module.exports = (async() => {
 
   const envVars = [
     // 'CORS_ORIGIN',
-    'SELF_HOST',
-    'JWT_AUDIENCE',
-    'JWT_ISSUER',
-    'JWT_NETWORK_URI',
-    'JWT_CLIENT',
-    'ADDRESS_API',
-    'ADDRESS_API_KEY'
+    // 'SELF_HOST',
+    // 'JWT_AUDIENCE',
+    // 'JWT_ISSUER',
+    // 'JWT_NETWORK_URI',
+    // 'JWT_CLIENT',
+    // 'ADDRESS_API',
+    // 'ADDRESS_API_KEY'
   ];
 
   for (let envVar of envVars) {
