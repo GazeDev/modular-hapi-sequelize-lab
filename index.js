@@ -116,54 +116,54 @@ module.exports = (async() => {
     console.log(e);
   }
 
-  // const validateUser = async (decoded, request) => {
-  //   // This is a simple check that the `sub` claim
-  //   // exists in the access token.
-  //
-  //   if (decoded && decoded.sub) {
-  //     // Email may not be verified, we should decide if that's OK and/or if we
-  //     // validate that at this level or the route level.
-  //     return {
-  //       isValid: true,
-  //       credentials: {
-  //         scope: decoded.scope.split(' '),
-  //         resourceAccess: decoded.resource_access,
-  //         subjectId: decoded.sub,
-  //         email: decoded.email,
-  //         emailVerified: decoded.email_verified,
-  //         name: decoded.name,
-  //         preferredUsername: decoded.preferred_username,
-  //         givenName: decoded.given_name,
-  //         familyName: decoded.family_name,
-  //       },
-  //     };
-  //   }
-  //   return { isValid: false };
-  // };
-  //
-  // await server.register(jwt);
-  //
-  // server.auth.strategy('jwt', 'jwt', {
-  //   complete: true,
-  //   // verify the access token against the remote JWKS
-  //   key: jwksRsa.hapiJwt2KeyAsync({
-  //     cache: true,
-  //     rateLimit: true,
-  //     jwksRequestsPerMinute: 60,
-  //     jwksUri: `${process.env.JWT_NETWORK_URI}/protocol/openid-connect/certs`,
-  //   }),
-  //   verifyOptions: {
-  //     audience: process.env.JWT_AUDIENCE,
-  //     issuer: process.env.JWT_ISSUER,
-  //     algorithms: ['RS256']
-  //   },
-  //   validate: validateUser
-  // });
-  //
-  // server.auth.default({
-  //   strategy: 'jwt',
-  //   mode: 'optional'
-  // });
+  const validateUser = async (decoded, request) => {
+    // This is a simple check that the `sub` claim
+    // exists in the access token.
+
+    if (decoded && decoded.sub) {
+      // Email may not be verified, we should decide if that's OK and/or if we
+      // validate that at this level or the route level.
+      return {
+        isValid: true,
+        credentials: {
+          scope: decoded.scope.split(' '),
+          resourceAccess: decoded.resource_access,
+          subjectId: decoded.sub,
+          email: decoded.email,
+          emailVerified: decoded.email_verified,
+          name: decoded.name,
+          preferredUsername: decoded.preferred_username,
+          givenName: decoded.given_name,
+          familyName: decoded.family_name,
+        },
+      };
+    }
+    return { isValid: false };
+  };
+
+  await server.register(jwt);
+
+  server.auth.strategy('jwt', 'jwt', {
+    complete: true,
+    // verify the access token against the remote JWKS
+    key: jwksRsa.hapiJwt2KeyAsync({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 60,
+      jwksUri: `${process.env.JWT_NETWORK_URI}/protocol/openid-connect/certs`,
+    }),
+    verifyOptions: {
+      audience: process.env.JWT_AUDIENCE,
+      issuer: process.env.JWT_ISSUER,
+      algorithms: ['RS256']
+    },
+    validate: validateUser
+  });
+
+  server.auth.default({
+    strategy: 'jwt',
+    mode: 'optional'
+  });
 
   /*
     NOTE:
