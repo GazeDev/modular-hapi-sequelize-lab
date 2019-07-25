@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "lab --globals core,__core-js_shared__,@@any-promise/REGISTRATION --verbose --assert @hapi/code lib/user/user.tests.js",
+    "test": "gulp test",
     "hold": "tail -f /dev/null"
   },
   "author": "Gaze.dev",
