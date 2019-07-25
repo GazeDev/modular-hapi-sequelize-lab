@@ -87,34 +87,34 @@ module.exports = (async() => {
 
   const routes = [];
 
-  // // define the models of all of our modules
-  // for (let mod of modules) {
-  //   let modelsFile;
-  //   try {
-  //     modelsFile = require(`./lib/${mod}/${mod}.models.js`);
-  //     if (modelsFile.db) {
-  //       let model = modelsFile.db(sequelize, Sequelize);
-  //       models[model.name] = model;
-  //     }
-  //   } catch(err) {
-  //     console.log(err);
-  //     console.log(`module ${mod} did not have a models file`);
-  //   }
-  // }
-  // // now that all the models are loaded, run associations
-  // Object.keys(models).forEach(function(modelName) {
-  //   if (models[modelName].associate) {
-  //     models[modelName].associate(models);
-  //   }
-  // });
-  //
-  // // NOTE: This will wipe/forcibly restructure a database. ONLY USE FOR DEV.
-  // try {
-  //   await sequelize.sync({force: true});
-  // } catch (e) {
-  //   console.log('sync error');
-  //   console.log(e);
-  // }
+  // define the models of all of our modules
+  for (let mod of modules) {
+    let modelsFile;
+    try {
+      modelsFile = require(`./lib/${mod}/${mod}.models.js`);
+      if (modelsFile.db) {
+        let model = modelsFile.db(sequelize, Sequelize);
+        models[model.name] = model;
+      }
+    } catch(err) {
+      console.log(err);
+      console.log(`module ${mod} did not have a models file`);
+    }
+  }
+  // now that all the models are loaded, run associations
+  Object.keys(models).forEach(function(modelName) {
+    if (models[modelName].associate) {
+      models[modelName].associate(models);
+    }
+  });
+
+  // NOTE: This will wipe/forcibly restructure a database. ONLY USE FOR DEV.
+  try {
+    await sequelize.sync({force: true});
+  } catch (e) {
+    console.log('sync error');
+    console.log(e);
+  }
 
   // const validateUser = async (decoded, request) => {
   //   // This is a simple check that the `sub` claim
