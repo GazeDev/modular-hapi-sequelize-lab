@@ -73,8 +73,8 @@ module.exports = (async() => {
       },
       logging: false,
     });
-    console.log('new sequelize');
-    console.log('sequelize', sequelize);
+    // console.log('new sequelize');
+    // console.log('sequelize', sequelize);
   } catch (err) {
     console.log('Sequelize init error:');
     console.log(err);
@@ -176,18 +176,18 @@ module.exports = (async() => {
    */
 
   // Build the routes of all our modules, injecting the models into each
-  // for (let mod of modules) {
-  //   let routesFile;
-  //   try {
-  //     routesFile = require(`./lib/${mod}/${mod}.routes.js`);
-  //     if(routesFile.routes) {
-  //       await server.route(routesFile.routes(models));
-  //     }
-  //   } catch(err) {
-  //     console.log(err);
-  //     console.log(`module ${mod} did not have a routes file or hapi failed to register them`);
-  //   }
-  // }
+  for (let mod of modules) {
+    let routesFile;
+    try {
+      routesFile = require(`./lib/${mod}/${mod}.routes.js`);
+      if(routesFile.routes) {
+        await server.route(routesFile.routes(models));
+      }
+    } catch(err) {
+      console.log(err);
+      console.log(`module ${mod} did not have a routes file or hapi failed to register them`);
+    }
+  }
 
   server.route({
     method: 'GET',
@@ -198,38 +198,38 @@ module.exports = (async() => {
     }
   });
 
-  // const swaggerOptions = {
-  //   host: process.env.SELF_HOST,
-  //   info: {
-  //     title: 'API Documentation',
-  //     version: "1.0",
-  //   },
-  //   grouping: 'tags',
-  //   securityDefinitions: {
-  //     'Bearer': {
-  //       'type': 'apiKey',
-  //       'name': 'Authorization',
-  //       'in': 'header'
-  //     },
-  //     'gaze_auth': {
-  //       'type':	'oauth2',
-  //       'authorizationUrl':	`${process.env.JWT_ISSUER}/protocol/openid-connect/auth`,
-  //       'tokenUrl': `${process.env.JWT_ISSUER}/protocol/openid-connect/token`,
-  //       'flow':	'accessCode'
-  //     },
-  //   },
-  //   security: [{ 'Bearer': []}],
-  //   // jsonEditor: true,
-  // };
-  //
-  // try {
-  //   await server.register([Inert, Vision, {
-  //     'plugin': HapiSwagger,
-  //     'options': swaggerOptions
-  //   }]);
-  // } catch (err) {
-  //   console.log(err);
-  // }
+  const swaggerOptions = {
+    host: process.env.SELF_HOST,
+    info: {
+      title: 'API Documentation',
+      version: "1.0",
+    },
+    grouping: 'tags',
+    securityDefinitions: {
+      'Bearer': {
+        'type': 'apiKey',
+        'name': 'Authorization',
+        'in': 'header'
+      },
+      'gaze_auth': {
+        'type':	'oauth2',
+        'authorizationUrl':	`${process.env.JWT_ISSUER}/protocol/openid-connect/auth`,
+        'tokenUrl': `${process.env.JWT_ISSUER}/protocol/openid-connect/token`,
+        'flow':	'accessCode'
+      },
+    },
+    security: [{ 'Bearer': []}],
+    // jsonEditor: true,
+  };
+
+  try {
+    await server.register([Inert, Vision, {
+      'plugin': HapiSwagger,
+      'options': swaggerOptions
+    }]);
+  } catch (err) {
+    console.log(err);
+  }
 
 
   try {
