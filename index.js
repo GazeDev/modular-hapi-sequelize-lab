@@ -240,6 +240,6 @@ module.exports = (async() => {
 
   return {
     server: server,
-    // sequelize: sequelize
+    sequelize: sequelize
   };
 })();
