@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "code": "^5.2.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-lab": "^1.0.7",
     "lab": "^15.5.0"
   }
